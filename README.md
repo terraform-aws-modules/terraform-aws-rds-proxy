@@ -14,7 +14,7 @@ See [`examples`](./examples) directory for working examples to reference:
 
 ```hcl
 module "rds_proxy" {
-  source  = "clowdhaus/rds-proxy/aws"
+  source = "clowdhaus/rds-proxy/aws"
 
   name                   = "rds-proxy"
   iam_role_name          = "rds-proxy-role"
@@ -23,7 +23,7 @@ module "rds_proxy" {
 
   secrets = {
     "superuser" = {
-      description = "Aurora PostgreSQL superuser password
+      description = "Aurora PostgreSQL superuser password"
       arn         = "arn:aws:secretsmanager:us-east-1:123456789012:secret:superuser-6gsjLD"
       kms_key_id  = "6ca29066-552a-46c5-a7d7-7bf9a15fc255"
     }
@@ -38,7 +38,7 @@ module "rds_proxy" {
   db_cluster_identifier = "myendpoint"
 
   tags = {
-    Terraform = "true"
+    Terraform   = "true"
     Environment = "dev"
   }
 }
