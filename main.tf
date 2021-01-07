@@ -75,7 +75,7 @@ resource "aws_db_proxy_target" "db_cluster" {
 ################################################################################
 
 resource "aws_cloudwatch_log_group" "this" {
-  count = var.create_proxy && var.manage_log_group && var.debug_logging ? 1 : 0
+  count = var.create_proxy && var.manage_log_group ? 1 : 0
 
   name              = "/aws/rds/proxy/${var.name}"
   retention_in_days = var.log_group_retention_in_days
