@@ -22,12 +22,12 @@ output "proxy_default_target_group_id" {
 
 output "proxy_default_target_group_arn" {
   description = "The Amazon Resource Name (ARN) for the default target group"
-  value       = element(concat(aws_db_proxy_default_target_group.this.*.id, [""]), 0)
+  value       = element(concat(aws_db_proxy_default_target_group.this.*.arn, [""]), 0)
 }
 
 output "proxy_default_target_group_name" {
   description = "The name of the default target group"
-  value       = element(concat(aws_db_proxy_default_target_group.this.*.id, [""]), 0)
+  value       = element(concat(aws_db_proxy_default_target_group.this.*.name, [""]), 0)
 }
 
 # Proxy Target
