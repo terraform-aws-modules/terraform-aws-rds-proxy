@@ -2,12 +2,6 @@
 
 Terraform module which creates an AWS RDS Proxy and its supporting resources.
 
-The following resources are supported:
-
-- [AWS RDS Proxy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy)
-- [AWS RDS Proxy Default Target Group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_default_target_group)
-- [AWS RDS Proxy Target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_target)
-
 ## Usage
 
 See [`examples`](./examples) directory for working examples to reference:
@@ -20,6 +14,20 @@ module "rds_proxy" {
   iam_role_name          = "rds-proxy-role"
   vpc_subnet_ids         = ["subnet-30ef7b3c", "subnet-1ecda77b", "subnet-ca09ddbc"]
   vpc_security_group_ids = ["sg-f1d03a88"]
+
+  db_proxy_endpoints = {
+    read_write = {
+      name                   = "read-write-endpoint"
+      vpc_subnet_ids         = ["subnet-30ef7b3c", "subnet-1ecda77b", "subnet-ca09ddbc"]
+      vpc_security_group_ids = ["sg-f1d03a88"]
+    },
+    read_only = {
+      name                   = "read-only-endpoint"
+      vpc_subnet_ids         = ["subnet-30ef7b3c", "subnet-1ecda77b", "subnet-ca09ddbc"]
+      vpc_security_group_ids = ["sg-f1d03a88"]
+      target_role            = "READ_ONLY"
+    }
+  }
 
   secrets = {
     "superuser" = {
@@ -58,14 +66,14 @@ Examples codified under the [`examples`](./examples) are intended to give users 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.9 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.38 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.9 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.38 |
 
 ## Modules
 
@@ -78,6 +86,7 @@ No modules.
 | [aws_cloudwatch_log_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_db_proxy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy) | resource |
 | [aws_db_proxy_default_target_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_default_target_group) | resource |
+| [aws_db_proxy_endpoint.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_endpoint) | resource |
 | [aws_db_proxy_target.db_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_target) | resource |
 | [aws_db_proxy_target.db_instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_target) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -100,6 +109,7 @@ No modules.
 | <a name="input_db_host"></a> [db\_host](#input\_db\_host) | The identifier to use for the database endpoint | `string` | `""` | no |
 | <a name="input_db_instance_identifier"></a> [db\_instance\_identifier](#input\_db\_instance\_identifier) | DB instance identifier | `string` | `""` | no |
 | <a name="input_db_name"></a> [db\_name](#input\_db\_name) | The name of the database | `string` | `""` | no |
+| <a name="input_db_proxy_endpoints"></a> [db\_proxy\_endpoints](#input\_db\_proxy\_endpoints) | Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`) | `any` | `{}` | no |
 | <a name="input_debug_logging"></a> [debug\_logging](#input\_debug\_logging) | Whether the proxy includes detailed information about SQL statements in its logs | `bool` | `false` | no |
 | <a name="input_engine_family"></a> [engine\_family](#input\_engine\_family) | The kind of database engine that the proxy will connect to. Valid values are `MYSQL` or `POSTGRESQL` | `string` | `""` | no |
 | <a name="input_iam_auth"></a> [iam\_auth](#input\_iam\_auth) | Whether to require or disallow AWS Identity and Access Management (IAM) authentication for connections to the proxy. One of `DISABLED`, `REQUIRED` | `string` | `"REQUIRED"` | no |
@@ -138,6 +148,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_db_proxy_endpoints"></a> [db\_proxy\_endpoints](#output\_db\_proxy\_endpoints) | Array containing the full resource object and attributes for all DB proxy endpoints created |
 | <a name="output_log_group_arn"></a> [log\_group\_arn](#output\_log\_group\_arn) | The Amazon Resource Name (ARN) of the CloudWatch log group |
 | <a name="output_proxy_arn"></a> [proxy\_arn](#output\_proxy\_arn) | The Amazon Resource Name (ARN) for the proxy |
 | <a name="output_proxy_default_target_group_arn"></a> [proxy\_default\_target\_group\_arn](#output\_proxy\_default\_target\_group\_arn) | The Amazon Resource Name (ARN) for the default target group |

@@ -66,6 +66,12 @@ output "proxy_target_type" {
   value       = element(concat(aws_db_proxy_target.db_instance.*.type, aws_db_proxy_target.db_cluster.*.type, [""]), 0)
 }
 
+# DB proxy endponts
+output "db_proxy_endpoints" {
+  description = "Array containing the full resource object and attributes for all DB proxy endpoints created"
+  value       = aws_db_proxy_endpoint.this
+}
+
 # CloudWatch logs
 output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
