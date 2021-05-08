@@ -66,6 +66,12 @@ output "proxy_target_type" {
   value       = module.rds_proxy.proxy_target_type
 }
 
+# DB proxy endponts
+output "db_proxy_endpoints" {
+  description = "Array containing the full resource object and attributes for all DB proxy endpoints created"
+  value       = module.rds_proxy.db_proxy_endpoints
+}
+
 # CloudWatch logs
 output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
@@ -75,7 +81,8 @@ output "log_group_arn" {
 # For aiding in testing & verification
 output "superuser_db_password_connect" {
   description = "Connect to database using superuser with username/password directly to database"
-  value       = "mysql --host=${module.rds.this_db_instance_address} --user=${local.db_username} --password=${local.db_password} ${module.rds.this_db_instance_name}"
+  value       = "mysql --host=${module.rds.db_instance_address} --user=${local.db_username} --password=${local.db_password} ${module.rds.db_instance_name}"
+  sensitive   = true
 }
 
 output "superuser_proxy_iam_token" {
@@ -85,5 +92,5 @@ output "superuser_proxy_iam_token" {
 
 output "superuser_proxy_iam_connect" {
   description = "Connect to RDS Proxy using IAM auth via token generated"
-  value       = "mysql --host=${module.rds_proxy.proxy_endpoint} --user=${local.db_username} --password=$TOKEN ${module.rds.this_db_instance_name} --ssl-ca=/home/ssm-user/AmazonRootCA1.pem --enable-cleartext-plugin"
+  value       = "mysql --host=${module.rds_proxy.proxy_endpoint} --user=${local.db_username} --password=$TOKEN ${module.rds.db_instance_name} --ssl-ca=/home/ssm-user/AmazonRootCA1.pem --enable-cleartext-plugin"
 }

@@ -66,6 +66,12 @@ output "proxy_target_type" {
   value       = module.rds_proxy.proxy_target_type
 }
 
+# DB proxy endponts
+output "db_proxy_endpoints" {
+  description = "Array containing the full resource object and attributes for all DB proxy endpoints created"
+  value       = module.rds_proxy.db_proxy_endpoints
+}
+
 # CloudWatch logs
 output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
@@ -75,7 +81,8 @@ output "log_group_arn" {
 # For aiding in testing & verification
 output "superuser_db_password_connect" {
   description = "Connect to database using superuser with username/password directly to database"
-  value       = "PGPASSWORD=${local.db_password} psql -h ${module.rds.this_rds_cluster_endpoint} -p 5432 -d ${module.rds.this_rds_cluster_database_name} -U ${local.db_username} --set=sslmode=require"
+  value       = "PGPASSWORD=${local.db_password} psql -h ${module.rds.rds_cluster_endpoint} -p 5432 -d ${module.rds.rds_cluster_database_name} -U ${local.db_username} --set=sslmode=require"
+  sensitive   = true
 }
 
 output "superuser_proxy_iam_token" {
@@ -85,5 +92,5 @@ output "superuser_proxy_iam_token" {
 
 output "superuser_proxy_iam_connect" {
   description = "Connect to RDS Proxy using IAM auth via token generated"
-  value       = "psql \"host=${module.rds_proxy.proxy_endpoint} port=5432 sslmode=verify-full sslrootcert=/home/ssm-user/AmazonRootCA1.pem dbname=${module.rds.this_rds_cluster_database_name} user=${local.db_username} password=$TOKEN\""
+  value       = "psql \"host=${module.rds_proxy.proxy_endpoint} port=5432 sslmode=verify-full sslrootcert=/home/ssm-user/AmazonRootCA1.pem dbname=${module.rds.rds_cluster_database_name} user=${local.db_username} password=$TOKEN\""
 }

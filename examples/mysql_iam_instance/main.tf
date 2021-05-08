@@ -38,7 +38,7 @@ resource "random_password" "password" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "~> 3"
 
   name = local.name
   cidr = "10.0.0.0/18"
@@ -56,7 +56,7 @@ module "vpc" {
 
 module "rds_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
+  version = "~> 4"
 
   name        = "rds"
   description = "MySQL RDS example security group"
@@ -77,7 +77,7 @@ module "rds_sg" {
 
 module "rds" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "2.20.0"
+  version = "~> 3"
 
   name     = local.db_name
   username = local.db_username
@@ -97,7 +97,7 @@ module "rds" {
   storage_encrypted    = false
   apply_immediately    = true
 
-  vpc_security_group_ids = [module.rds_sg.this_security_group_id]
+  vpc_security_group_ids = [module.rds_sg.security_group_id]
   subnet_ids             = module.vpc.database_subnets
 
   maintenance_window      = "Mon:00:00-Mon:03:00"
@@ -168,7 +168,7 @@ data "aws_ami" "ubuntu" {
 
 module "ec2_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
+  version = "~> 4"
 
   name        = "ec2"
   description = "EC2 RDS Proxy example security group"
@@ -181,7 +181,7 @@ module "ec2_sg" {
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "2.16.0"
+  version = "~> 2"
 
   name           = local.name
   instance_count = 1
@@ -200,7 +200,7 @@ module "ec2_instance" {
 
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t3.micro"
-  vpc_security_group_ids = [module.ec2_sg.this_security_group_id]
+  vpc_security_group_ids = [module.ec2_sg.security_group_id]
   subnet_ids             = module.vpc.private_subnets
 
   tags = local.tags
@@ -236,7 +236,7 @@ resource "aws_secretsmanager_secret_version" "superuser" {
 
 module "rds_proxy_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
+  version = "~> 4"
 
   name        = "rds_proxy"
   description = "MySQL RDS Proxy example security group"
@@ -271,7 +271,23 @@ module "rds_proxy" {
   name                   = local.name
   iam_role_name          = local.name
   vpc_subnet_ids         = module.vpc.private_subnets
-  vpc_security_group_ids = [module.rds_proxy_sg.this_security_group_id]
+  vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+
+  db_proxy_endpoints = {
+    read_write = {
+      name                   = "read-write-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      tags                   = local.tags
+    },
+    read_only = {
+      name                   = "read-only-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      target_role            = "READ_ONLY"
+      tags                   = local.tags
+    }
+  }
 
   secrets = {
     "${local.db_username}" = {
@@ -282,13 +298,13 @@ module "rds_proxy" {
   }
 
   engine_family = "MYSQL"
-  db_host       = module.rds.this_db_instance_address
-  db_name       = module.rds.this_db_instance_name
+  db_host       = module.rds.db_instance_address
+  db_name       = module.rds.db_instance_name
   debug_logging = true
 
   # Target RDS instance
   target_db_instance     = true
-  db_instance_identifier = module.rds.this_db_instance_id
+  db_instance_identifier = module.rds.db_instance_id
 
   tags = local.tags
 }

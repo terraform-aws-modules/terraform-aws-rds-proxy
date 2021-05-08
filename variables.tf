@@ -157,6 +157,13 @@ variable "db_cluster_identifier" {
   default     = ""
 }
 
+# Proxy endpoints
+variable "db_proxy_endpoints" {
+  description = "Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`)"
+  type        = any
+  default     = {}
+}
+
 # CloudWatch Logs
 variable "manage_log_group" {
   description = "Determines whether Terraform will create/manage the CloudWatch log group or not. Note - this will fail if set to true after the log group has been created as the resource will already exist"

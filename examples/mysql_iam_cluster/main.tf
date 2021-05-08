@@ -38,7 +38,7 @@ resource "random_password" "password" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "~> 3"
 
   name = local.name
   cidr = "10.0.0.0/18"
@@ -57,7 +57,7 @@ module "vpc" {
 
 module "rds" {
   source  = "terraform-aws-modules/rds-aurora/aws"
-  version = "3.0.0"
+  version = "~> 4"
 
   name          = local.name
   database_name = local.db_name
@@ -77,7 +77,7 @@ module "rds" {
 
   vpc_id                  = module.vpc.vpc_id
   subnets                 = module.vpc.database_subnets
-  allowed_security_groups = [module.rds_proxy_sg.this_security_group_id]
+  allowed_security_groups = [module.rds_proxy_sg.security_group_id]
 
   db_subnet_group_name            = local.name # Created by VPC module
   db_parameter_group_name         = aws_db_parameter_group.aurora_db_mysql57_parameter_group.id
@@ -158,7 +158,7 @@ data "aws_ami" "ubuntu" {
 
 module "ec2_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
+  version = "~> 4"
 
   name        = "ec2"
   description = "EC2 RDS Proxy example security group"
@@ -171,7 +171,7 @@ module "ec2_sg" {
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "2.16.0"
+  version = "~> 2"
 
   name           = local.name
   instance_count = 1
@@ -190,7 +190,7 @@ module "ec2_instance" {
 
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t3.micro"
-  vpc_security_group_ids = [module.ec2_sg.this_security_group_id]
+  vpc_security_group_ids = [module.ec2_sg.security_group_id]
   subnet_ids             = module.vpc.private_subnets
 
   tags = local.tags
@@ -226,7 +226,7 @@ resource "aws_secretsmanager_secret_version" "superuser" {
 
 module "rds_proxy_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
+  version = "~> 4"
 
   name        = "rds_proxy"
   description = "PostgreSQL RDS Proxy example security group"
@@ -261,7 +261,23 @@ module "rds_proxy" {
   name                   = local.name
   iam_role_name          = local.name
   vpc_subnet_ids         = module.vpc.private_subnets
-  vpc_security_group_ids = [module.rds_proxy_sg.this_security_group_id]
+  vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+
+  db_proxy_endpoints = {
+    read_write = {
+      name                   = "read-write-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      tags                   = local.tags
+    },
+    read_only = {
+      name                   = "read-only-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      target_role            = "READ_ONLY"
+      tags                   = local.tags
+    }
+  }
 
   secrets = {
     "${local.db_username}" = {
@@ -272,13 +288,13 @@ module "rds_proxy" {
   }
 
   engine_family = "MYSQL"
-  db_host       = module.rds.this_rds_cluster_endpoint
-  db_name       = module.rds.this_rds_cluster_database_name
+  db_host       = module.rds.rds_cluster_endpoint
+  db_name       = module.rds.rds_cluster_database_name
   debug_logging = true
 
   # Target Aurora cluster
   target_db_cluster     = true
-  db_cluster_identifier = module.rds.this_rds_cluster_id
+  db_cluster_identifier = module.rds.rds_cluster_id
 
   tags = local.tags
 }
