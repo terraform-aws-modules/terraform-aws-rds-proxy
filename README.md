@@ -61,7 +61,7 @@ Examples codified under the [`examples`](./examples) are intended to give users 
 - [IAM auth. w/ PostgreSQL Aurora cluster](./examples/postgresql_iam_cluster)
 - [IAM auth. w/ PostgreSQL RDS instance](./examples/postgresql_iam_instance)
 
-## Security & Compliance [<img src="https://cloudposse.com/wp-content/uploads/2020/11/bridgecrew.svg" width="250" align="right" />](https://bridgecrew.io/)
+## Security & Compliance [<img src="https://raw.githubusercontent.com/clowdhaus/terraform-aws-rds-proxy/main/.github/images/bridgecrew.svg" width="250" align="right" />](https://bridgecrew.io/)
 
 Security scanning results provided by Bridgecrew. Bridgecrew is the leading fully hosted, cloud-native solution providing continuous Terraform security and compliance.
 
