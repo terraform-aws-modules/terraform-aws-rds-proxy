@@ -61,6 +61,21 @@ Examples codified under the [`examples`](./examples) are intended to give users 
 - [IAM auth. w/ PostgreSQL Aurora cluster](./examples/postgresql_iam_cluster)
 - [IAM auth. w/ PostgreSQL RDS instance](./examples/postgresql_iam_instance)
 
+## Security & Compliance [<img src="https://cloudposse.com/wp-content/uploads/2020/11/bridgecrew.svg" width="250" align="right" />](https://bridgecrew.io/)
+
+Security scanning results provided by Bridgecrew. Bridgecrew is the leading fully hosted, cloud-native solution providing continuous Terraform security and compliance.
+
+| Benchmark | Description |
+|--------|---------------|
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=INFRASTRUCTURE+SECURITY) | Infrastructure Security Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/cis_aws)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=CIS+AWS+V1.2) | Center for Internet Security, AWS Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/pci_dss_v321)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=PCI-DSS+V3.2.1) | Payment Card Industry Data Security Standards Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/nist)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=NIST-800-53) | National Institute of Standards and Technology Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/iso)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=ISO27001) | Information Security Management System, ISO/IEC 27001 Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/soc2)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=SOC2) | Service Organization Control 2 Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/hipaa)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=HIPAA) | Health Insurance Portability and Accountability Compliance |
+| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/fedramp_moderate)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=FEDRAMP+%28MODERATE%29) | FedRAMP Moderate Impact Level |
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

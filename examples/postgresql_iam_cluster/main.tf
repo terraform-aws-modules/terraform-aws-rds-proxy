@@ -51,6 +51,18 @@ module "vpc" {
   create_database_subnet_group = true
   enable_nat_gateway           = true
   single_nat_gateway           = true
+  map_public_ip_on_launch      = false
+
+  manage_default_security_group  = true
+  default_security_group_ingress = []
+  default_security_group_egress  = []
+
+  enable_flow_log                      = true
+  flow_log_destination_type            = "cloud-watch-logs"
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+  flow_log_max_aggregation_interval    = 60
+  flow_log_log_format                  = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status} $${vpc-id} $${subnet-id} $${instance-id} $${tcp-flags} $${type} $${pkt-srcaddr} $${pkt-dstaddr} $${region} $${az-id} $${sublocation-type} $${sublocation-id}"
 
   tags = local.tags
 }
@@ -71,13 +83,18 @@ module "rds" {
   engine_version      = "11.9"
   replica_count       = 1
   instance_type       = "db.t3.medium"
-  storage_encrypted   = false
+  storage_encrypted   = true
   apply_immediately   = true
   skip_final_snapshot = true
 
-  vpc_id                  = module.vpc.vpc_id
-  subnets                 = module.vpc.database_subnets
-  allowed_security_groups = [module.rds_proxy_sg.security_group_id]
+  enabled_cloudwatch_logs_exports = ["postgresql"]
+  monitoring_interval             = 60
+  create_monitoring_role          = true
+
+  vpc_id                 = module.vpc.vpc_id
+  subnets                = module.vpc.database_subnets
+  create_security_group  = false
+  vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
 
   db_subnet_group_name            = local.name # Created by VPC module
   db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres11_parameter_group.id
@@ -90,12 +107,16 @@ resource "aws_db_parameter_group" "aurora_db_postgres11_parameter_group" {
   name        = "example-aurora-db-postgres11-parameter-group"
   family      = "aurora-postgresql11"
   description = "test-aurora-db-postgres11-parameter-group"
+
+  tags = local.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres11_parameter_group" {
   name        = "example-aurora-postgres11-cluster-parameter-group"
   family      = "aurora-postgresql11"
   description = "example-aurora-postgres11-cluster-parameter-group"
+
+  tags = local.tags
 }
 
 ################################################################################
@@ -105,6 +126,8 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres11_parameter_
 resource "aws_iam_instance_profile" "ec2_test" {
   name_prefix = local.name
   role        = aws_iam_role.ec2_test.name
+
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "ec2_test_assume" {
@@ -121,6 +144,8 @@ resource "aws_iam_role" "ec2_test" {
   name_prefix           = local.name
   force_detach_policies = true
   assume_role_policy    = data.aws_iam_policy_document.ec2_test_assume.json
+
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "ec2_test" {
@@ -171,14 +196,23 @@ module "ec2_sg" {
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 2"
+  version = "~> 3"
 
-  name           = local.name
-  instance_count = 1
+  name = local.name
 
-  associate_public_ip_address = true
-  iam_instance_profile        = aws_iam_instance_profile.ec2_test.name
-  user_data                   = <<-EOT
+  monitoring    = true
+  ebs_optimized = true
+  metadata_options = {
+    http_endpoint = "disabled"
+  }
+  root_block_device = [
+    {
+      encrypted = true
+    }
+  ]
+
+  iam_instance_profile = aws_iam_instance_profile.ec2_test.name
+  user_data            = <<-EOT
   #!/usr/bin/env bash
 
   mkdir -p /home/ssm-user/ && wget -O /home/ssm-user/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
@@ -191,7 +225,7 @@ module "ec2_instance" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t3.micro"
   vpc_security_group_ids = [module.ec2_sg.security_group_id]
-  subnet_ids             = module.vpc.private_subnets
+  subnet_id              = element(module.vpc.private_subnets, 0)
 
   tags = local.tags
 }
