@@ -1,4 +1,4 @@
-name: Release
+name: release
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   release:
-    name: Release
+    name: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,5 +26,5 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
         run: npx semantic-release
