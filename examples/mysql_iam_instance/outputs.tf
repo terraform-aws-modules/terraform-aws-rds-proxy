@@ -77,20 +77,3 @@ output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
   value       = module.rds_proxy.log_group_arn
 }
-
-# For aiding in testing & verification
-output "superuser_db_password_connect" {
-  description = "Connect to database using superuser with username/password directly to database"
-  value       = "mysql --host=${module.rds.db_instance_address} --user=${local.db_username} --password=${local.db_password} ${module.rds.db_instance_name}"
-  sensitive   = true
-}
-
-output "superuser_proxy_iam_token" {
-  description = "Gerate connection token for connecting to RDS Proxy with IAM auth"
-  value       = "TOKEN=$(aws rds generate-db-auth-token --hostname ${module.rds_proxy.proxy_endpoint} --port 3306 --region ${local.region} --username ${local.db_username})"
-}
-
-output "superuser_proxy_iam_connect" {
-  description = "Connect to RDS Proxy using IAM auth via token generated"
-  value       = "mysql --host=${module.rds_proxy.proxy_endpoint} --user=${local.db_username} --password=$TOKEN ${module.rds.db_instance_name} --ssl-ca=/home/ssm-user/AmazonRootCA1.pem --enable-cleartext-plugin"
-}

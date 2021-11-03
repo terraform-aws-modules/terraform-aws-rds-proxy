@@ -38,7 +38,7 @@ resource "random_password" "password" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3"
+  version = "~> 3.0"
 
   name = local.name
   cidr = "10.0.0.0/18"
@@ -69,20 +69,21 @@ module "vpc" {
 
 module "rds" {
   source  = "terraform-aws-modules/rds-aurora/aws"
-  version = "~> 5"
+  version = "~> 6.0"
 
-  name          = local.name
-  database_name = local.db_name
-  username      = local.db_username
-  password      = local.db_password
+  name            = local.name
+  database_name   = local.db_name
+  master_username = local.db_username
+  master_password = local.db_password
 
   # When using RDS Proxy w/ IAM auth - Database must be username/password auth, not IAM
   iam_database_authentication_enabled = false
 
-  engine              = "aurora-postgresql"
-  engine_version      = "11.9"
-  replica_count       = 1
-  instance_type       = "db.t3.medium"
+  engine         = "aurora-postgresql"
+  engine_version = "11.12"
+  instance_class = "db.r6g.large"
+  instances      = { 1 = {}, 2 = {} }
+
   storage_encrypted   = true
   apply_immediately   = true
   skip_final_snapshot = true
@@ -97,6 +98,7 @@ module "rds" {
   vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
 
   db_subnet_group_name            = local.name # Created by VPC module
+  create_db_subnet_group          = false
   db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres11_parameter_group.id
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres11_parameter_group.id
 
@@ -115,117 +117,6 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres11_parameter_
   name        = "example-aurora-postgres11-cluster-parameter-group"
   family      = "aurora-postgresql11"
   description = "example-aurora-postgres11-cluster-parameter-group"
-
-  tags = local.tags
-}
-
-################################################################################
-# Test Resources
-################################################################################
-
-resource "aws_iam_instance_profile" "ec2_test" {
-  name_prefix = local.name
-  role        = aws_iam_role.ec2_test.name
-
-  tags = local.tags
-}
-
-data "aws_iam_policy_document" "ec2_test_assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "ec2_test" {
-  name_prefix           = local.name
-  force_detach_policies = true
-  assume_role_policy    = data.aws_iam_policy_document.ec2_test_assume.json
-
-  tags = local.tags
-}
-
-data "aws_iam_policy_document" "ec2_test" {
-  statement {
-    actions   = ["rds-db:connect"]
-    resources = ["${local.db_iam_connect_prefix}/${local.db_username}"]
-  }
-}
-
-resource "aws_iam_role_policy" "ec2_test" {
-  name_prefix = local.name
-  role        = aws_iam_role.ec2_test.id
-  policy      = data.aws_iam_policy_document.ec2_test.json
-}
-
-resource "aws_iam_role_policy_attachment" "ec2_ssm" {
-  role       = aws_iam_role.ec2_test.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["679593333241"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu-minimal/images/hvm-ssd/ubuntu-focal-20.04-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-module "ec2_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4"
-
-  name        = "ec2"
-  description = "EC2 RDS Proxy example security group"
-  vpc_id      = module.vpc.vpc_id
-
-  egress_rules = ["all-all"]
-
-  tags = local.tags
-}
-
-module "ec2_instance" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 3"
-
-  name = local.name
-
-  monitoring    = true
-  ebs_optimized = true
-  metadata_options = {
-    http_endpoint = "disabled"
-  }
-  root_block_device = [
-    {
-      encrypted = true
-    }
-  ]
-
-  iam_instance_profile = aws_iam_instance_profile.ec2_test.name
-  user_data            = <<-EOT
-  #!/usr/bin/env bash
-
-  mkdir -p /home/ssm-user/ && wget -O /home/ssm-user/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
-
-  apt update
-  apt install awscli postgresql-client -y
-
-  EOT
-
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.micro"
-  vpc_security_group_ids = [module.ec2_sg.security_group_id]
-  subnet_id              = element(module.vpc.private_subnets, 0)
 
   tags = local.tags
 }
@@ -260,7 +151,7 @@ resource "aws_secretsmanager_secret_version" "superuser" {
 
 module "rds_proxy_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4"
+  version = "~> 4.0"
 
   name        = "rds_proxy"
   description = "PostgreSQL RDS Proxy example security group"
@@ -322,13 +213,13 @@ module "rds_proxy" {
   }
 
   engine_family = "POSTGRESQL"
-  db_host       = module.rds.rds_cluster_endpoint
-  db_name       = module.rds.rds_cluster_database_name
+  db_host       = module.rds.cluster_endpoint
+  db_name       = module.rds.cluster_database_name
   debug_logging = true
 
   # Target Aurora cluster
   target_db_cluster     = true
-  db_cluster_identifier = module.rds.rds_cluster_id
+  db_cluster_identifier = module.rds.cluster_id
 
   tags = local.tags
 }
