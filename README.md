@@ -37,11 +37,8 @@ module "rds_proxy" {
     }
   }
 
-  engine_family = "POSTGRESQL"
-  db_host       = "myendpoint.cluster-custom-123456789012.us-east-1.rds.amazonaws.com"
-  db_name       = "example"
-
   # Target Aurora cluster
+  engine_family         = "POSTGRESQL"
   target_db_cluster     = true
   db_cluster_identifier = "myendpoint"
 
