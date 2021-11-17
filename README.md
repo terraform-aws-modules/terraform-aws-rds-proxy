@@ -114,21 +114,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_auth"></a> [auth](#input\_auth) | Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters | `map(string)` | `{}` | no |
 | <a name="input_auth_scheme"></a> [auth\_scheme](#input\_auth\_scheme) | The type of authentication that the proxy uses for connections from the proxy to the underlying database. One of `SECRETS` | `string` | `"SECRETS"` | no |
 | <a name="input_connection_borrow_timeout"></a> [connection\_borrow\_timeout](#input\_connection\_borrow\_timeout) | The number of seconds for a proxy to wait for a connection to become available in the connection pool | `number` | `null` | no |
 | <a name="input_create_iam_policy"></a> [create\_iam\_policy](#input\_create\_iam\_policy) | Determines whether an IAM policy is created | `bool` | `true` | no |
 | <a name="input_create_iam_role"></a> [create\_iam\_role](#input\_create\_iam\_role) | Determines whether an IAM role is created | `bool` | `true` | no |
 | <a name="input_create_proxy"></a> [create\_proxy](#input\_create\_proxy) | Determines whether a proxy and its resources will be created | `bool` | `true` | no |
 | <a name="input_db_cluster_identifier"></a> [db\_cluster\_identifier](#input\_db\_cluster\_identifier) | DB cluster identifier | `string` | `""` | no |
-| <a name="input_db_host"></a> [db\_host](#input\_db\_host) | The identifier to use for the database endpoint | `string` | `""` | no |
 | <a name="input_db_instance_identifier"></a> [db\_instance\_identifier](#input\_db\_instance\_identifier) | DB instance identifier | `string` | `""` | no |
-| <a name="input_db_name"></a> [db\_name](#input\_db\_name) | The name of the database | `string` | `""` | no |
 | <a name="input_db_proxy_endpoints"></a> [db\_proxy\_endpoints](#input\_db\_proxy\_endpoints) | Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`) | `any` | `{}` | no |
 | <a name="input_debug_logging"></a> [debug\_logging](#input\_debug\_logging) | Whether the proxy includes detailed information about SQL statements in its logs | `bool` | `false` | no |
 | <a name="input_engine_family"></a> [engine\_family](#input\_engine\_family) | The kind of database engine that the proxy will connect to. Valid values are `MYSQL` or `POSTGRESQL` | `string` | `""` | no |
 | <a name="input_iam_auth"></a> [iam\_auth](#input\_iam\_auth) | Whether to require or disallow AWS Identity and Access Management (IAM) authentication for connections to the proxy. One of `DISABLED`, `REQUIRED` | `string` | `"REQUIRED"` | no |
-| <a name="input_iam_creation_wait_duration"></a> [iam\_creation\_wait\_duration](#input\_iam\_creation\_wait\_duration) | Time duration delay to wait for IAM resource creation/propagation. For example, 30s for 30 seconds or 5m for 5 minutes. Updating this value by itself will not trigger a delay. | `string` | `"30s"` | no |
 | <a name="input_iam_policy_name"></a> [iam\_policy\_name](#input\_iam\_policy\_name) | The name of the role policy. If omitted, Terraform will assign a random, unique name | `string` | `""` | no |
 | <a name="input_iam_role_description"></a> [iam\_role\_description](#input\_iam\_role\_description) | The description of the role | `string` | `""` | no |
 | <a name="input_iam_role_force_detach_policies"></a> [iam\_role\_force\_detach\_policies](#input\_iam\_role\_force\_detach\_policies) | Specifies to force detaching any policies the role has before destroying it | `bool` | `true` | no |

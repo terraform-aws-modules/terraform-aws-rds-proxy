@@ -3,24 +3,16 @@ provider "aws" {
 }
 
 locals {
-  region = "us-east-1"
-  name   = "example-${replace(basename(path.cwd), "_", "-")}"
-
-  db_name               = "example"
-  db_username           = random_pet.users.id # using random here due to secrets taking at least 7 days before fully deleting from account
-  db_password           = random_password.password.result
-  db_proxy_resource_id  = element(split(":", module.rds_proxy.proxy_arn), 6)
-  db_iam_connect_prefix = "arn:aws:rds-db:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:dbuser:${local.db_proxy_resource_id}"
+  region      = "us-east-1"
+  name        = "example-${replace(basename(path.cwd), "_", "-")}"
+  db_username = random_pet.users.id # using random here due to secrets taking at least 7 days before fully deleting from account
+  db_password = random_password.password.result
 
   tags = {
     Example     = local.name
     Environment = "dev"
   }
 }
-
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
 
 ################################################################################
 # Supporting Resources
@@ -92,7 +84,7 @@ module "rds" {
   source  = "terraform-aws-modules/rds/aws"
   version = "~> 3.0"
 
-  name     = local.db_name
+  name     = "example"
   username = local.db_username
   password = local.db_password
 
@@ -218,8 +210,6 @@ module "rds_proxy" {
   }
 
   engine_family = "MYSQL"
-  db_host       = module.rds.db_instance_address
-  db_name       = module.rds.db_instance_name
   debug_logging = true
 
   # Target RDS instance

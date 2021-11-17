@@ -17,12 +17,6 @@ variable "name" {
   default     = ""
 }
 
-variable "auth" {
-  description = "Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters"
-  type        = map(string)
-  default     = {}
-}
-
 variable "debug_logging" {
   description = "Whether the proxy includes detailed information about SQL statements in its logs"
   type        = bool
@@ -87,18 +81,6 @@ variable "secrets" {
   description = "Map of secerets to be used by RDS Proxy for authentication to the database"
   type        = map(object({ arn = string, description = string, kms_key_id = string }))
   default     = {}
-}
-
-variable "db_host" {
-  description = "The identifier to use for the database endpoint"
-  type        = string
-  default     = ""
-}
-
-variable "db_name" {
-  description = "The name of the database"
-  type        = string
-  default     = ""
 }
 
 # Proxy Default Target Group
@@ -261,10 +243,4 @@ variable "use_policy_name_prefix" {
   description = "Whether to use unique name beginning with the specified `iam_policy_name`"
   type        = bool
   default     = false
-}
-
-variable "iam_creation_wait_duration" {
-  description = "Time duration delay to wait for IAM resource creation/propagation. For example, 30s for 30 seconds or 5m for 5 minutes. Updating this value by itself will not trigger a delay."
-  type        = string
-  default     = "30s"
 }

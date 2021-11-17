@@ -1,7 +1,4 @@
 locals {
-  db_identifier_key   = var.db_instance_identifier != "" ? "dbInstanceIdentifier" : "dbClusterIdentifier"
-  db_identifier_value = var.db_instance_identifier != "" ? var.db_instance_identifier : var.db_cluster_identifier
-
   role_arn    = var.create_proxy && var.create_iam_role ? aws_iam_role.this[0].arn : var.role_arn
   role_name   = coalesce(var.iam_role_name, var.name)
   policy_name = coalesce(var.iam_policy_name, var.name)
