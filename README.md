@@ -1,14 +1,23 @@
 # AWS RDS Proxy Terraform module
 
+## ⚠️ Module has moved to `terraform-aws-modules`
+
+This module has moved to the terraform-aws-modules organization. Users will need to update their module source:
+
+```diff
+- source = "clowdhaus/rds-proxy/aws"
++ source = "terraform-aws-modules/rds-proxy/aws"
+```
+
 Terraform module which creates an AWS RDS Proxy and its supporting resources.
 
 ## Usage
 
-See [`examples`](./examples) directory for working examples to reference:
+See [`examples`](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples) directory for working examples to reference:
 
 ```hcl
 module "rds_proxy" {
-  source = "clowdhaus/rds-proxy/aws"
+  source = "terraform-aws-modules/rds-proxy/aws"
 
   name                   = "rds-proxy"
   iam_role_name          = "rds-proxy-role"
@@ -51,27 +60,12 @@ module "rds_proxy" {
 
 ## Examples
 
-Examples codified under the [`examples`](./examples) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module(s). If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
+Examples codified under the [`examples`](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module(s). If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-- [IAM auth. w/ MySQL Aurora cluster](./examples/mysql_iam_cluster)
-- [IAM auth. w/ MySQL RDS instance](./examples/mysql_iam_instance)
-- [IAM auth. w/ PostgreSQL Aurora cluster](./examples/postgresql_iam_cluster)
-- [IAM auth. w/ PostgreSQL RDS instance](./examples/postgresql_iam_instance)
-
-## Security & Compliance [<img src="https://raw.githubusercontent.com/clowdhaus/terraform-aws-rds-proxy/main/.github/images/bridgecrew.svg" width="250" align="right" />](https://bridgecrew.io/)
-
-Security scanning results provided by Bridgecrew. Bridgecrew is the leading fully hosted, cloud-native solution providing continuous Terraform security and compliance.
-
-| Benchmark | Description |
-|--------|---------------|
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=INFRASTRUCTURE+SECURITY) | Infrastructure Security Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/cis_aws)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=CIS+AWS+V1.2) | Center for Internet Security, AWS Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/pci_dss_v321)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=PCI-DSS+V3.2.1) | Payment Card Industry Data Security Standards Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/nist)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=NIST-800-53) | National Institute of Standards and Technology Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/iso)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=ISO27001) | Information Security Management System, ISO/IEC 27001 Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/soc2)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=SOC2) | Service Organization Control 2 Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/hipaa)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=HIPAA) | Health Insurance Portability and Accountability Compliance |
-| [![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/clowdhaus/terraform-aws-rds-proxy/fedramp_moderate)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=clowdhaus%2Fterraform-aws-rds-proxy&benchmark=FEDRAMP+%28MODERATE%29) | FedRAMP Moderate Impact Level |
+- [IAM auth. w/ MySQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql_iam_cluster)
+- [IAM auth. w/ MySQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql_iam_instance)
+- [IAM auth. w/ PostgreSQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql_iam_cluster)
+- [IAM auth. w/ PostgreSQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql_iam_instance)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -175,4 +169,4 @@ No modules.
 
 ## License
 
-Apache-2.0 Licensed. See [LICENSE](LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/LICENSE).

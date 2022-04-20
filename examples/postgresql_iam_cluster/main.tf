@@ -3,15 +3,65 @@ provider "aws" {
 }
 
 locals {
-  region      = "us-east-1"
-  name        = "example-${replace(basename(path.cwd), "_", "-")}"
+  region = "us-east-1"
+  name   = "rds-proxy-ex-${replace(basename(path.cwd), "_", "-")}"
+
   db_username = random_pet.users.id # using random here due to secrets taking at least 7 days before fully deleting from account
   db_password = random_password.password.result
 
   tags = {
-    Example     = local.name
-    Environment = "dev"
+    Name       = local.name
+    Example    = local.name
+    Repository = "https://github.com/terraform-aws-modules/terraform-aws-rds-proxy"
   }
+}
+
+################################################################################
+# RDS Proxy
+################################################################################
+
+module "rds_proxy" {
+  source = "../../"
+
+  create_proxy = true
+
+  name                   = local.name
+  iam_role_name          = local.name
+  vpc_subnet_ids         = module.vpc.private_subnets
+  vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+
+  db_proxy_endpoints = {
+    read_write = {
+      name                   = "read-write-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      tags                   = local.tags
+    },
+    read_only = {
+      name                   = "read-only-endpoint"
+      vpc_subnet_ids         = module.vpc.private_subnets
+      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
+      target_role            = "READ_ONLY"
+      tags                   = local.tags
+    }
+  }
+
+  secrets = {
+    "${local.db_username}" = {
+      description = aws_secretsmanager_secret.superuser.description
+      arn         = aws_secretsmanager_secret.superuser.arn
+      kms_key_id  = aws_secretsmanager_secret.superuser.kms_key_id
+    }
+  }
+
+  engine_family = "POSTGRESQL"
+  debug_logging = true
+
+  # Target Aurora cluster
+  target_db_cluster     = true
+  db_cluster_identifier = module.rds.cluster_id
+
+  tags = local.tags
 }
 
 ################################################################################
@@ -113,34 +163,6 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres11_parameter_
   tags = local.tags
 }
 
-################################################################################
-# Secrets - DB user passwords
-################################################################################
-
-data "aws_kms_alias" "secretsmanager" {
-  name = "alias/aws/secretsmanager"
-}
-
-resource "aws_secretsmanager_secret" "superuser" {
-  name        = local.db_username
-  description = "Database superuser, ${local.db_username}, databse connection values"
-  kms_key_id  = data.aws_kms_alias.secretsmanager.id
-
-  tags = local.tags
-}
-
-resource "aws_secretsmanager_secret_version" "superuser" {
-  secret_id = aws_secretsmanager_secret.superuser.id
-  secret_string = jsonencode({
-    username = local.db_username
-    password = local.db_password
-  })
-}
-
-################################################################################
-# RDS Proxy
-################################################################################
-
 module "rds_proxy_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
@@ -170,46 +192,26 @@ module "rds_proxy_sg" {
   tags = local.tags
 }
 
-module "rds_proxy" {
-  source = "../../"
+################################################################################
+# Secrets - DB user passwords
+################################################################################
 
-  create_proxy = true
+data "aws_kms_alias" "secretsmanager" {
+  name = "alias/aws/secretsmanager"
+}
 
-  name                   = local.name
-  iam_role_name          = local.name
-  vpc_subnet_ids         = module.vpc.private_subnets
-  vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
-
-  db_proxy_endpoints = {
-    read_write = {
-      name                   = "read-write-endpoint"
-      vpc_subnet_ids         = module.vpc.private_subnets
-      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
-      tags                   = local.tags
-    },
-    read_only = {
-      name                   = "read-only-endpoint"
-      vpc_subnet_ids         = module.vpc.private_subnets
-      vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
-      target_role            = "READ_ONLY"
-      tags                   = local.tags
-    }
-  }
-
-  secrets = {
-    "${local.db_username}" = {
-      description = aws_secretsmanager_secret.superuser.description
-      arn         = aws_secretsmanager_secret.superuser.arn
-      kms_key_id  = aws_secretsmanager_secret.superuser.kms_key_id
-    }
-  }
-
-  engine_family = "POSTGRESQL"
-  debug_logging = true
-
-  # Target Aurora cluster
-  target_db_cluster     = true
-  db_cluster_identifier = module.rds.cluster_id
+resource "aws_secretsmanager_secret" "superuser" {
+  name        = local.db_username
+  description = "Database superuser, ${local.db_username}, databse connection values"
+  kms_key_id  = data.aws_kms_alias.secretsmanager.id
 
   tags = local.tags
+}
+
+resource "aws_secretsmanager_secret_version" "superuser" {
+  secret_id = aws_secretsmanager_secret.superuser.id
+  secret_string = jsonencode({
+    username = local.db_username
+    password = local.db_password
+  })
 }
