@@ -1,14 +1,5 @@
 # AWS RDS Proxy Terraform module
 
-## ⚠️ Module has moved to `terraform-aws-modules`
-
-This module has moved to the terraform-aws-modules organization. Users will need to update their module source:
-
-```diff
-- source = "clowdhaus/rds-proxy/aws"
-+ source = "terraform-aws-modules/rds-proxy/aws"
-```
-
 Terraform module which creates an AWS RDS Proxy and its supporting resources.
 
 ## Usage
@@ -169,4 +160,4 @@ No modules.
 
 ## License
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/blob/master/LICENSE).
