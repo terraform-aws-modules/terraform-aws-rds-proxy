@@ -1,8 +1,7 @@
 locals {
-  role_arn           = var.create_proxy && var.create_iam_role ? aws_iam_role.this[0].arn : var.role_arn
-  role_name          = coalesce(var.iam_role_name, var.name)
-  policy_name        = coalesce(var.iam_policy_name, var.name)
-  db_proxy_endpoints = var.create_proxy ? var.db_proxy_endpoints : {}
+  role_arn    = var.create_proxy && var.create_iam_role ? aws_iam_role.this[0].arn : var.role_arn
+  role_name   = coalesce(var.iam_role_name, var.name)
+  policy_name = coalesce(var.iam_policy_name, var.name)
 }
 
 data "aws_region" "current" {}
@@ -69,7 +68,7 @@ resource "aws_db_proxy_target" "db_cluster" {
 }
 
 resource "aws_db_proxy_endpoint" "this" {
-  for_each = local.db_proxy_endpoints
+  for_each = { for k, v in var.db_proxy_endpoints : k => v if var.create_proxy }
 
   db_proxy_name          = aws_db_proxy.this[0].name
   db_proxy_endpoint_name = each.value.name
