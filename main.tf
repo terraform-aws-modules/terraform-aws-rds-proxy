@@ -68,7 +68,7 @@ resource "aws_db_proxy_target" "db_cluster" {
 }
 
 resource "aws_db_proxy_endpoint" "this" {
-  for_each = var.db_proxy_endpoints
+  for_each = { for k, v in var.db_proxy_endpoints : k => v if var.create_proxy }
 
   db_proxy_name          = aws_db_proxy.this[0].name
   db_proxy_endpoint_name = each.value.name
