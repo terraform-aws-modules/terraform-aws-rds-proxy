@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.2](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v2.1.1...v2.1.2) (2022-10-27)
+
+
+### Bug Fixes
+
+* Update CI configuration files to use latest version ([#13](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/13)) ([2e11175](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/2e111751a3b6d6a28ac3c7bf8924ac5dcf07e10e))
+
 ### [2.1.1](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v2.1.0...v2.1.1) (2022-08-10)
 
 
