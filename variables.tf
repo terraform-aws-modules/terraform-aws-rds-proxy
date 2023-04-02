@@ -79,7 +79,7 @@ variable "proxy_tags" {
 
 variable "secrets" {
   description = "Map of secerets to be used by RDS Proxy for authentication to the database"
-  type        = map(object({ arn = string, description = string, kms_key_id = string }))
+  type        = map(object({ arn = string, description = string, kms_key_id = string, client_password_auth_type = string }))
   default     = {}
 }
 
