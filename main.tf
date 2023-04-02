@@ -25,10 +25,11 @@ resource "aws_db_proxy" "this" {
   dynamic "auth" {
     for_each = var.secrets
     content {
-      auth_scheme = var.auth_scheme
-      description = auth.value.description
-      iam_auth    = var.iam_auth
-      secret_arn  = auth.value.arn
+      auth_scheme               = var.auth_scheme
+      description               = auth.value.description
+      iam_auth                  = var.iam_auth
+      secret_arn                = auth.value.arn
+      client_password_auth_type = auth.value.client_password_auth_type
     }
   }
 
