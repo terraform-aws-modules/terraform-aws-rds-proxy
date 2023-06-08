@@ -1,37 +1,40 @@
 locals {
-  role_arn    = var.create_proxy && var.create_iam_role ? aws_iam_role.this[0].arn : var.role_arn
+  role_arn    = var.create && var.create_iam_role ? aws_iam_role.this[0].arn : var.role_arn
   role_name   = coalesce(var.iam_role_name, var.name)
   policy_name = coalesce(var.iam_policy_name, var.name)
 }
 
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 ################################################################################
 # RDS Proxy
 ################################################################################
 
 resource "aws_db_proxy" "this" {
-  count = var.create_proxy ? 1 : 0
+  count = var.create ? 1 : 0
 
-  name                   = var.name
+  dynamic "auth" {
+    for_each = var.auth
+
+    content {
+      auth_scheme               = try(auth.value.auth_scheme, "SECRETS")
+      client_password_auth_type = try(auth.value.client_password_auth_type, null)
+      description               = try(auth.value.description, null)
+      iam_auth                  = try(auth.value.iam_auth, null)
+      secret_arn                = try(auth.value.secret_arn, null)
+      username                  = try(auth.value.username, null)
+    }
+  }
+
   debug_logging          = var.debug_logging
   engine_family          = var.engine_family
   idle_client_timeout    = var.idle_client_timeout
+  name                   = var.name
   require_tls            = var.require_tls
   role_arn               = local.role_arn
   vpc_security_group_ids = var.vpc_security_group_ids
   vpc_subnet_ids         = var.vpc_subnet_ids
-
-  dynamic "auth" {
-    for_each = var.secrets
-    content {
-      auth_scheme               = var.auth_scheme
-      description               = auth.value.description
-      iam_auth                  = var.iam_auth
-      secret_arn                = auth.value.arn
-      client_password_auth_type = auth.value.client_password_auth_type
-    }
-  }
 
   tags = merge(var.tags, var.proxy_tags)
 
@@ -39,7 +42,7 @@ resource "aws_db_proxy" "this" {
 }
 
 resource "aws_db_proxy_default_target_group" "this" {
-  count = var.create_proxy ? 1 : 0
+  count = var.create ? 1 : 0
 
   db_proxy_name = aws_db_proxy.this[0].name
 
@@ -53,7 +56,7 @@ resource "aws_db_proxy_default_target_group" "this" {
 }
 
 resource "aws_db_proxy_target" "db_instance" {
-  count = var.create_proxy && var.target_db_instance ? 1 : 0
+  count = var.create && var.target_db_instance ? 1 : 0
 
   db_proxy_name          = aws_db_proxy.this[0].name
   target_group_name      = aws_db_proxy_default_target_group.this[0].name
@@ -61,7 +64,7 @@ resource "aws_db_proxy_target" "db_instance" {
 }
 
 resource "aws_db_proxy_target" "db_cluster" {
-  count = var.create_proxy && var.target_db_cluster ? 1 : 0
+  count = var.create && var.target_db_cluster ? 1 : 0
 
   db_proxy_name         = aws_db_proxy.this[0].name
   target_group_name     = aws_db_proxy_default_target_group.this[0].name
@@ -69,7 +72,7 @@ resource "aws_db_proxy_target" "db_cluster" {
 }
 
 resource "aws_db_proxy_endpoint" "this" {
-  for_each = { for k, v in var.db_proxy_endpoints : k => v if var.create_proxy }
+  for_each = { for k, v in var.endpoints : k => v if var.create }
 
   db_proxy_name          = aws_db_proxy.this[0].name
   db_proxy_endpoint_name = each.value.name
@@ -85,7 +88,7 @@ resource "aws_db_proxy_endpoint" "this" {
 ################################################################################
 
 resource "aws_cloudwatch_log_group" "this" {
-  count = var.create_proxy && var.manage_log_group ? 1 : 0
+  count = var.create && var.manage_log_group ? 1 : 0
 
   name              = "/aws/rds/proxy/${var.name}"
   retention_in_days = var.log_group_retention_in_days
@@ -99,7 +102,7 @@ resource "aws_cloudwatch_log_group" "this" {
 ################################################################################
 
 data "aws_iam_policy_document" "assume_role" {
-  count = var.create_proxy && var.create_iam_role ? 1 : 0
+  count = var.create && var.create_iam_role ? 1 : 0
 
   statement {
     sid     = "RDSAssume"
@@ -108,13 +111,13 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["rds.amazonaws.com"]
+      identifiers = ["rds.${data.aws_partition.current.dns_suffix}"]
     }
   }
 }
 
 resource "aws_iam_role" "this" {
-  count = var.create_proxy && var.create_iam_role ? 1 : 0
+  count = var.create && var.create_iam_role ? 1 : 0
 
   name        = var.use_role_name_prefix ? null : local.role_name
   name_prefix = var.use_role_name_prefix ? "${local.role_name}-" : null
@@ -130,19 +133,22 @@ resource "aws_iam_role" "this" {
 }
 
 data "aws_iam_policy_document" "this" {
-  count = var.create_proxy && var.create_iam_role ? 1 : 0
+  count = var.create && var.create_iam_role && var.create_iam_policy ? 1 : 0
 
   statement {
-    sid       = "DecryptSecrets"
-    effect    = "Allow"
-    actions   = ["kms:Decrypt"]
-    resources = distinct([for secret in var.secrets : secret.kms_key_id])
+    sid     = "DecryptSecrets"
+    effect  = "Allow"
+    actions = ["kms:Decrypt"]
+    resources = coalescelist(
+      var.kms_key_arns,
+      ["arn:${data.aws_partition.current.partition}:kms:*:*:key/*"]
+    )
+
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-
       values = [
-        "secretsmanager.${data.aws_region.current.name}.amazonaws.com"
+        "secretsmanager.${data.aws_region.current.name}.${data.aws_partition.current.dns_suffix}"
       ]
     }
   }
@@ -167,12 +173,12 @@ data "aws_iam_policy_document" "this" {
       "secretsmanager:ListSecretVersionIds",
     ]
 
-    resources = distinct([for secret in var.secrets : secret.arn])
+    resources = distinct([for auth in var.auth : auth.secret_arn])
   }
 }
 
 resource "aws_iam_role_policy" "this" {
-  count = var.create_proxy && var.create_iam_role && var.create_iam_policy ? 1 : 0
+  count = var.create && var.create_iam_role && var.create_iam_policy ? 1 : 0
 
   name        = var.use_policy_name_prefix ? null : local.policy_name
   name_prefix = var.use_policy_name_prefix ? "${local.policy_name}-" : null
