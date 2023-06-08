@@ -68,6 +68,7 @@ module "rds_proxy" {
 +    "superuser" = {
 +      description = "Aurora PostgreSQL superuser password"
 +      secret_arn  = "arn:aws:secretsmanager:us-east-1:123456789012:secret:superuser-6gsjLD"
++    }
 +  }
 +  kms_key_arns = ["arn:aws:kms:eu-west-1:123456789012:key/6ca29066-552a-46c5-a7d7-7bf9a15fc255"]
   }
