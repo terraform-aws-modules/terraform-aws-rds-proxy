@@ -71,7 +71,6 @@ module "rds_proxy" {
 +    }
 +  }
 +  kms_key_arns = ["arn:aws:kms:eu-west-1:123456789012:key/6ca29066-552a-46c5-a7d7-7bf9a15fc255"]
-  }
 }
 ```
 
