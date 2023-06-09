@@ -66,7 +66,7 @@ output "proxy_target_type" {
   value       = module.rds_proxy.proxy_target_type
 }
 
-# DB proxy endponts
+# DB proxy endpoints
 output "db_proxy_endpoints" {
   description = "Array containing the full resource object and attributes for all DB proxy endpoints created"
   value       = module.rds_proxy.db_proxy_endpoints

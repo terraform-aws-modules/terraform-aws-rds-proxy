@@ -1,8 +1,8 @@
-# RDS Proxy - IAM Authentication & PostgreSQL Instance
+# RDS Proxy - IAM Authentication & MySQL Cluster
 
 Configuration in this directory creates:
 
-- AWS RDS Proxy w/ IAM authentication enabled for an RDS PostgreSQL instance
+- AWS RDS Proxy w/ IAM authentication enabled for an RDS Aurora MySQL cluster
 
 ## Usage
 
@@ -22,44 +22,37 @@ An EC2 instance configuration has been provided for use in validating the exampl
 
 1. Connect to the EC2 instance using Session Manager
 2. Copy the output from `superuser_proxy_iam_token` and paste it into the Session Manager window - this generates the token for connecting to the proxy with IAM auth.
-3. Copy the output from `superuser_proxy_iam_connect` and paste it into the window - NOTE: remove the string escape slashes `psql \"host...` -> `psql "host...`
-4. You should now be connected to the `example` database in the Aurora cluster via the AWS Proxy using IAM authentication
+3. Copy the output from `superuser_proxy_iam_connect` and paste it into the window
+4. You should now be connected to the `example` database in the RDS instance via the AWS Proxy using IAM authentication
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.38 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.38 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_rds"></a> [rds](#module\_rds) | terraform-aws-modules/rds/aws | ~> 3.0 |
+| <a name="module_rds"></a> [rds](#module\_rds) | terraform-aws-modules/rds-aurora/aws | ~> 8.0 |
 | <a name="module_rds_proxy"></a> [rds\_proxy](#module\_rds\_proxy) | ../../ | n/a |
-| <a name="module_rds_proxy_sg"></a> [rds\_proxy\_sg](#module\_rds\_proxy\_sg) | terraform-aws-modules/security-group/aws | ~> 4.0 |
-| <a name="module_rds_sg"></a> [rds\_sg](#module\_rds\_sg) | terraform-aws-modules/security-group/aws | ~> 4.0 |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
+| <a name="module_rds_proxy_sg"></a> [rds\_proxy\_sg](#module\_rds\_proxy\_sg) | terraform-aws-modules/security-group/aws | ~> 5.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_secretsmanager_secret.superuser](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
-| [aws_secretsmanager_secret_version.superuser](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
-| [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
-| [random_pet.users](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
-| [aws_kms_alias.secretsmanager](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/kms_alias) | data source |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 

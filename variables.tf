@@ -1,20 +1,29 @@
+variable "create" {
+  description = "Whether cluster should be created (affects nearly all resources)"
+  type        = bool
+  default     = true
+}
+
 variable "tags" {
-  description = "A map of tags to use on all resources"
+  description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
 }
 
+################################################################################
 # RDS Proxy
-variable "create_proxy" {
-  description = "Determines whether a proxy and its resources will be created"
-  type        = bool
-  default     = true
-}
+################################################################################
 
 variable "name" {
   description = "The identifier for the proxy. This name must be unique for all proxies owned by your AWS account in the specified AWS Region. An identifier must begin with a letter and must contain only ASCII letters, digits, and hyphens; it can't end with a hyphen or contain two consecutive hyphens"
   type        = string
   default     = ""
+}
+
+variable "auth" {
+  description = "Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters"
+  type        = any
+  default     = {}
 }
 
 variable "debug_logging" {
@@ -59,27 +68,9 @@ variable "vpc_subnet_ids" {
   default     = []
 }
 
-variable "auth_scheme" {
-  description = "The type of authentication that the proxy uses for connections from the proxy to the underlying database. One of `SECRETS`"
-  type        = string
-  default     = "SECRETS"
-}
-
-variable "iam_auth" {
-  description = "Whether to require or disallow AWS Identity and Access Management (IAM) authentication for connections to the proxy. One of `DISABLED`, `REQUIRED`"
-  type        = string
-  default     = "REQUIRED"
-}
-
 variable "proxy_tags" {
   description = "A map of tags to apply to the RDS Proxy"
   type        = map(string)
-  default     = {}
-}
-
-variable "secrets" {
-  description = "Map of secerets to be used by RDS Proxy for authentication to the database"
-  type        = map(object({ arn = string, description = string, kms_key_id = string }))
   default     = {}
 }
 
@@ -116,7 +107,7 @@ variable "session_pinning_filters" {
 
 # Proxy Target
 variable "target_db_instance" {
-  description = "Determines whether DB instance is targetted by proxy"
+  description = "Determines whether DB instance is targeted by proxy"
   type        = bool
   default     = false
 }
@@ -128,7 +119,7 @@ variable "db_instance_identifier" {
 }
 
 variable "target_db_cluster" {
-  description = "Determines whether DB cluster is targetted by proxy"
+  description = "Determines whether DB cluster is targeted by proxy"
   type        = bool
   default     = false
 }
@@ -140,13 +131,16 @@ variable "db_cluster_identifier" {
 }
 
 # Proxy endpoints
-variable "db_proxy_endpoints" {
+variable "endpoints" {
   description = "Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`)"
   type        = any
   default     = {}
 }
 
+################################################################################
 # CloudWatch Logs
+################################################################################
+
 variable "manage_log_group" {
   description = "Determines whether Terraform will create/manage the CloudWatch log group or not. Note - this will fail if set to true after the log group has been created as the resource will already exist"
   type        = bool
@@ -171,7 +165,10 @@ variable "log_group_tags" {
   default     = {}
 }
 
+################################################################################
 # IAM Role
+################################################################################
+
 variable "create_iam_role" {
   description = "Determines whether an IAM role is created"
   type        = bool
@@ -243,4 +240,10 @@ variable "use_policy_name_prefix" {
   description = "Whether to use unique name beginning with the specified `iam_policy_name`"
   type        = bool
   default     = false
+}
+
+variable "kms_key_arns" {
+  description = "List of KMS Key ARNs to allow access to decrypt SecretsManager secrets"
+  type        = list(string)
+  default     = []
 }
