@@ -52,10 +52,10 @@ module "rds_proxy" {
 
 Examples codified under the [`examples`](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module(s). If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-- [IAM auth. w/ MySQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql_iam_cluster)
-- [IAM auth. w/ MySQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql_iam_instance)
-- [IAM auth. w/ PostgreSQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql_iam_cluster)
-- [IAM auth. w/ PostgreSQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql_iam_instance)
+- [IAM auth. w/ MySQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql-iam-cluster)
+- [IAM auth. w/ MySQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/mysql-iam-instance)
+- [IAM auth. w/ PostgreSQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql-iam-cluster)
+- [IAM auth. w/ PostgreSQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql-iam-instance)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
