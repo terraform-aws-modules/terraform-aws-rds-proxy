@@ -77,3 +77,9 @@ output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
   value       = try(aws_cloudwatch_log_group.this[0].arn, null)
 }
+
+# IAM role
+output "iam_role_arn" {
+  description = "The Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager."
+  value       = local.role_arn
+}
