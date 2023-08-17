@@ -81,5 +81,15 @@ output "log_group_arn" {
 # IAM role
 output "iam_role_arn" {
   description = "The Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager."
-  value       = local.role_arn
+  value       = try(aws_iam_role.this.arn, null)
+}
+
+output "iam_role_name" {
+  description = "IAM role name"
+  value       = try(aws_iam_role.this.name, null)
+}
+
+output "iam_role_unique_id" {
+  description = "Stable and unique string identifying the IAM role"
+  value       = try(aws_iam_role.this.unique_id, null)
 }
