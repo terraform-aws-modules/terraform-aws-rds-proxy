@@ -77,3 +77,19 @@ output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
   value       = module.rds_proxy.log_group_arn
 }
+
+# IAM role
+output "iam_role_arn" {
+  description = "The Amazon Resource Name (ARN) specifying the role proxy uses to access secrets"
+  value       = module.rds_proxy.iam_role_arn
+}
+
+output "iam_role_name" {
+  description = "The name of the role proxy uses to access secrets"
+  value       = module.rds_proxy.iam_role_name
+}
+
+output "iam_role_unique_id" {
+  description = "Stable and unique string identifying the role proxy uses to access secrets"
+  value       = module.rds_proxy.iam_role_unique_id
+}
