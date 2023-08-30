@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.0.0...v3.1.0) (2023-08-30)
+
+
+### Features
+
+* Add IAM role output ([#22](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/22)) ([d18ae45](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/d18ae45d9ebf8253f7144e6bdc6ef39af9a4863f))
+
 ## [3.0.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v2.1.2...v3.0.0) (2023-06-09)
 
 
