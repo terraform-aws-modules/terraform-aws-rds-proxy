@@ -57,7 +57,7 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 - [IAM auth. w/ PostgreSQL Aurora cluster](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql-iam-cluster)
 - [IAM auth. w/ PostgreSQL RDS instance](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/tree/master/examples/postgresql-iam-instance)
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -158,7 +158,7 @@ No modules.
 | <a name="output_proxy_target_target_arn"></a> [proxy\_target\_target\_arn](#output\_proxy\_target\_target\_arn) | Amazon Resource Name (ARN) for the DB instance or DB cluster. Currently not returned by the RDS API |
 | <a name="output_proxy_target_tracked_cluster_id"></a> [proxy\_target\_tracked\_cluster\_id](#output\_proxy\_target\_tracked\_cluster\_id) | DB Cluster identifier for the DB Instance target. Not returned unless manually importing an RDS\_INSTANCE target that is part of a DB Cluster |
 | <a name="output_proxy_target_type"></a> [proxy\_target\_type](#output\_proxy\_target\_type) | Type of target. e.g. `RDS_INSTANCE` or `TRACKED_CLUSTER` |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 
