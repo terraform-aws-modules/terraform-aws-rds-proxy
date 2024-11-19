@@ -77,3 +77,8 @@ output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
   value       = module.rds_proxy.log_group_arn
 }
+
+output "log_group_name" {
+  description = "The name of the CloudWatch log group"
+  value       = module.rds_proxy.log_group_name
+}
