@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.1.1...v3.2.0) (2024-11-19)
+
+
+### Features
+
+* Add CloudWatch log group name to outputs ([#28](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/28)) ([0fc0e19](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/0fc0e19e642a2fdcd8f546bf219f78b5db252c65))
+
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#27](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/27)) ([b6f22be](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/b6f22becf63614f365e72a81151c1955ab0d4df3))
+
 ## [3.1.1](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.1.0...v3.1.1) (2024-03-06)
 
 
