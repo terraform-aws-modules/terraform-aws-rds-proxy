@@ -27,7 +27,7 @@ variable "auth" {
 }
 
 variable "debug_logging" {
-  description = "Whether the proxy includes detailed information about SQL statements in its logs"
+  description = "Whether the proxy includes detailed information about SQL statements in its logs. Only enable this setting for debugging and ensure proper security measures are in place to protect sensitive information in the logs. To minimize overhead, RDS Proxy automatically disables this setting 24 hours after activation. Use it temporarily to troubleshoot specific issues."
   type        = bool
   default     = false
 }
