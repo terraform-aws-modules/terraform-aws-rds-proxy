@@ -6,7 +6,10 @@ locals {
 
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
-
+data "aws_service_principal" "rds" {
+  service_name = "rds"
+  region = data.aws_region.current.region
+}
 ################################################################################
 # RDS Proxy
 ################################################################################
@@ -111,7 +114,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = distinct(["rds.${data.aws_partition.current.dns_suffix}", "rds.amazonaws.com"])
+      identifiers = [data.aws_service_principal.rds.id]
     }
   }
 }
