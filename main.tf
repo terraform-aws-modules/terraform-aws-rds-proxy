@@ -7,6 +7,7 @@ locals {
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
 data "aws_service_principal" "rds" {
+  count = var.create && var.create_iam_role ? 1 : 0
   service_name = "rds"
   region = data.aws_region.current.region
 }
@@ -114,7 +115,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = [data.aws_service_principal.rds.id]
+      identifiers = [data.aws_service_principal.rds[0].id]
     }
   }
 }
