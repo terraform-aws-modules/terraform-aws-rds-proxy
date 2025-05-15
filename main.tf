@@ -115,7 +115,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["rds.${data.aws_service_principal.rds[0].dns_suffix}"]
+      identifiers = ["rds.${data.aws_service_principal.rds[0].suffix}"]
     }
   }
 }
