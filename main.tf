@@ -9,7 +9,7 @@ data "aws_partition" "current" {}
 data "aws_service_principal" "rds" {
   count = var.create && var.create_iam_role ? 1 : 0
   service_name = "rds"
-  region = data.aws_region.current.region
+  region = data.aws_region.current.name
 }
 ################################################################################
 # RDS Proxy
