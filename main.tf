@@ -111,7 +111,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["rds.amazonaws.com"]
+      identifiers = distinct(["rds.${data.aws_partition.current.dns_suffix}", "rds.amazonaws.com"])
     }
   }
 }
