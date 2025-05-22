@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.1](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.2.0...v3.2.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* Correct service principal to rds.amazonaws.com (incl China) ([#32](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/32)) ([bbbf50c](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/bbbf50ce8734f05d4ac69fa41c23c88094b82356))
+
 ## [3.2.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.1.1...v3.2.0) (2024-11-19)
 
 
