@@ -61,7 +61,7 @@ module "rds_proxy" {
 
   # Target RDS instance
   target_db_instance     = true
-  db_instance_identifier = module.rds.db_instance_id
+  db_instance_identifier = module.rds.db_instance_identifier
 
   tags = local.tags
 }
@@ -82,7 +82,7 @@ resource "random_password" "password" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -97,7 +97,7 @@ module "vpc" {
 
 module "rds" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   username = local.db_username
   password = local.db_password
