@@ -1,4 +1,7 @@
+################################################################################
 # RDS Proxy
+################################################################################
+
 output "proxy_id" {
   description = "The ID for the proxy"
   value       = try(aws_db_proxy.this[0].id, null)
@@ -14,7 +17,10 @@ output "proxy_endpoint" {
   value       = try(aws_db_proxy.this[0].endpoint, null)
 }
 
-# Proxy Default Target Group
+################################################################################
+# Default Target Group
+################################################################################
+
 output "proxy_default_target_group_id" {
   description = "The ID for the default target group"
   value       = try(aws_db_proxy_default_target_group.this[0].id, null)
@@ -30,7 +36,10 @@ output "proxy_default_target_group_name" {
   value       = try(aws_db_proxy_default_target_group.this[0].name, null)
 }
 
-# Proxy Target
+################################################################################
+# Target(s)
+################################################################################
+
 output "proxy_target_endpoint" {
   description = "Hostname for the target RDS DB Instance. Only returned for `RDS_INSTANCE` type"
   value       = try(aws_db_proxy_target.db_instance[0].endpoint, aws_db_proxy_target.db_cluster[0].endpoint, null)
@@ -66,13 +75,19 @@ output "proxy_target_type" {
   value       = try(aws_db_proxy_target.db_instance[0].type, aws_db_proxy_target.db_cluster[0].type, null)
 }
 
-# DB proxy endpoints
+################################################################################
+# Endpoint(s)
+################################################################################
+
 output "db_proxy_endpoints" {
   description = "Array containing the full resource object and attributes for all DB proxy endpoints created"
   value       = aws_db_proxy_endpoint.this
 }
 
-# CloudWatch logs
+################################################################################
+# CloudWatch Log Group
+################################################################################
+
 output "log_group_arn" {
   description = "The Amazon Resource Name (ARN) of the CloudWatch log group"
   value       = try(aws_cloudwatch_log_group.this[0].arn, null)
@@ -83,7 +98,10 @@ output "log_group_name" {
   value       = try(aws_cloudwatch_log_group.this[0].name, null)
 }
 
-# IAM role
+################################################################################
+# IAM Role
+################################################################################
+
 output "iam_role_arn" {
   description = "The Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager."
   value       = try(aws_iam_role.this[0].arn, null)

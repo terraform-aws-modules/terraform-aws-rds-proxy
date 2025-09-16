@@ -4,6 +4,12 @@ variable "create" {
   default     = true
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
@@ -22,8 +28,19 @@ variable "name" {
 
 variable "auth" {
   description = "Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters"
-  type        = any
-  default     = {}
+  type = map(object({
+    auth_scheme               = optional(string)
+    client_password_auth_type = optional(string)
+    description               = optional(string)
+    iam_auth                  = optional(string)
+    secret_arn                = optional(string)
+    username                  = optional(string)
+  }))
+  default = {
+    default = {
+      auth_scheme = "SECRETS"
+    }
+  }
 }
 
 variable "debug_logging" {
@@ -74,7 +91,10 @@ variable "proxy_tags" {
   default     = {}
 }
 
-# Proxy Default Target Group
+################################################################################
+# Default Target Group
+################################################################################
+
 variable "connection_borrow_timeout" {
   description = "The number of seconds for a proxy to wait for a connection to become available in the connection pool"
   type        = number
@@ -105,7 +125,10 @@ variable "session_pinning_filters" {
   default     = []
 }
 
-# Proxy Target
+################################################################################
+# Target(s)
+################################################################################
+
 variable "target_db_instance" {
   description = "Determines whether DB instance is targeted by proxy"
   type        = bool
@@ -130,11 +153,20 @@ variable "db_cluster_identifier" {
   default     = ""
 }
 
-# Proxy endpoints
+################################################################################
+# Endpoint(s)
+################################################################################
+
 variable "endpoints" {
-  description = "Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`)"
-  type        = any
-  default     = {}
+  description = "Map of DB proxy endpoints to create and their attributes"
+  type = map(object({
+    name                   = optional(string)
+    vpc_subnet_ids         = list(string)
+    vpc_security_group_ids = optional(list(string))
+    target_role            = optional(string)
+    tags                   = optional(map(string), {})
+  }))
+  default = {}
 }
 
 ################################################################################
@@ -155,6 +187,12 @@ variable "log_group_retention_in_days" {
 
 variable "log_group_kms_key_id" {
   description = "The ARN of the KMS Key to use when encrypting log data"
+  type        = string
+  default     = null
+}
+
+variable "log_group_class" {
+  description = "Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS`"
   type        = string
   default     = null
 }
@@ -223,7 +261,10 @@ variable "iam_role_tags" {
   default     = {}
 }
 
-# IAM Policy
+################################################################################
+# IAM Role Policy
+################################################################################
+
 variable "create_iam_policy" {
   description = "Determines whether an IAM policy is created"
   type        = bool
