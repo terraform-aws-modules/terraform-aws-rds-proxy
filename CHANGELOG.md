@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.2.1...v4.0.0) (2025-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade AWS provider and min required Terraform version to `6.0` and `1.5.7` respectively (#34)
+
+### Features
+
+* Upgrade AWS provider and min required Terraform version to `6.0` and `1.5.7` respectively ([#34](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/34)) ([47c0fca](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/47c0fcad4b3e40ef112544028dba1a4c10ee50dc))
+
 ## [3.2.1](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.2.0...v3.2.1) (2025-05-22)
 
 
