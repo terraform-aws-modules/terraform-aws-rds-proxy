@@ -62,7 +62,7 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0 |
 
 ## Providers
@@ -97,7 +97,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_auth"></a> [auth](#input\_auth) | Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters | `any` | `{}` | no |
+| <a name="input_auth"></a> [auth](#input\_auth) | Configuration block(s) with authorization mechanisms to connect to the associated instances or clusters | <pre>map(object({<br/>    auth_scheme               = optional(string)<br/>    client_password_auth_type = optional(string)<br/>    description               = optional(string)<br/>    iam_auth                  = optional(string)<br/>    secret_arn                = optional(string)<br/>    username                  = optional(string)<br/>  }))</pre> | <pre>{<br/>  "default": {<br/>    "auth_scheme": "SECRETS"<br/>  }<br/>}</pre> | no |
 | <a name="input_connection_borrow_timeout"></a> [connection\_borrow\_timeout](#input\_connection\_borrow\_timeout) | The number of seconds for a proxy to wait for a connection to become available in the connection pool | `number` | `null` | no |
 | <a name="input_create"></a> [create](#input\_create) | Whether cluster should be created (affects nearly all resources) | `bool` | `true` | no |
 | <a name="input_create_iam_policy"></a> [create\_iam\_policy](#input\_create\_iam\_policy) | Determines whether an IAM policy is created | `bool` | `true` | no |
@@ -105,7 +105,7 @@ No modules.
 | <a name="input_db_cluster_identifier"></a> [db\_cluster\_identifier](#input\_db\_cluster\_identifier) | DB cluster identifier | `string` | `""` | no |
 | <a name="input_db_instance_identifier"></a> [db\_instance\_identifier](#input\_db\_instance\_identifier) | DB instance identifier | `string` | `""` | no |
 | <a name="input_debug_logging"></a> [debug\_logging](#input\_debug\_logging) | Whether the proxy includes detailed information about SQL statements in its logs | `bool` | `false` | no |
-| <a name="input_endpoints"></a> [endpoints](#input\_endpoints) | Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`) | `any` | `{}` | no |
+| <a name="input_endpoints"></a> [endpoints](#input\_endpoints) | Map of DB proxy endpoints to create and their attributes | <pre>map(object({<br/>    name                   = optional(string)<br/>    vpc_subnet_ids         = list(string)<br/>    vpc_security_group_ids = optional(list(string))<br/>    target_role            = optional(string)<br/>    tags                   = optional(map(string), {})<br/>  }))</pre> | `{}` | no |
 | <a name="input_engine_family"></a> [engine\_family](#input\_engine\_family) | The kind of database engine that the proxy will connect to. Valid values are `MYSQL` or `POSTGRESQL` | `string` | `""` | no |
 | <a name="input_iam_policy_name"></a> [iam\_policy\_name](#input\_iam\_policy\_name) | The name of the role policy. If omitted, Terraform will assign a random, unique name | `string` | `""` | no |
 | <a name="input_iam_role_description"></a> [iam\_role\_description](#input\_iam\_role\_description) | The description of the role | `string` | `""` | no |
@@ -118,6 +118,7 @@ No modules.
 | <a name="input_idle_client_timeout"></a> [idle\_client\_timeout](#input\_idle\_client\_timeout) | The number of seconds that a connection to the proxy can be inactive before the proxy disconnects it | `number` | `1800` | no |
 | <a name="input_init_query"></a> [init\_query](#input\_init\_query) | One or more SQL statements for the proxy to run when opening each new database connection | `string` | `""` | no |
 | <a name="input_kms_key_arns"></a> [kms\_key\_arns](#input\_kms\_key\_arns) | List of KMS Key ARNs to allow access to decrypt SecretsManager secrets | `list(string)` | `[]` | no |
+| <a name="input_log_group_class"></a> [log\_group\_class](#input\_log\_group\_class) | Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS` | `string` | `null` | no |
 | <a name="input_log_group_kms_key_id"></a> [log\_group\_kms\_key\_id](#input\_log\_group\_kms\_key\_id) | The ARN of the KMS Key to use when encrypting log data | `string` | `null` | no |
 | <a name="input_log_group_retention_in_days"></a> [log\_group\_retention\_in\_days](#input\_log\_group\_retention\_in\_days) | Specifies the number of days you want to retain log events in the log group | `number` | `30` | no |
 | <a name="input_log_group_tags"></a> [log\_group\_tags](#input\_log\_group\_tags) | A map of tags to apply to the CloudWatch log group | `map(string)` | `{}` | no |
@@ -126,6 +127,7 @@ No modules.
 | <a name="input_max_idle_connections_percent"></a> [max\_idle\_connections\_percent](#input\_max\_idle\_connections\_percent) | Controls how actively the proxy closes idle database connections in the connection pool | `number` | `50` | no |
 | <a name="input_name"></a> [name](#input\_name) | The identifier for the proxy. This name must be unique for all proxies owned by your AWS account in the specified AWS Region. An identifier must begin with a letter and must contain only ASCII letters, digits, and hyphens; it can't end with a hyphen or contain two consecutive hyphens | `string` | `""` | no |
 | <a name="input_proxy_tags"></a> [proxy\_tags](#input\_proxy\_tags) | A map of tags to apply to the RDS Proxy | `map(string)` | `{}` | no |
+| <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration | `string` | `null` | no |
 | <a name="input_require_tls"></a> [require\_tls](#input\_require\_tls) | A Boolean parameter that specifies whether Transport Layer Security (TLS) encryption is required for connections to the proxy | `bool` | `true` | no |
 | <a name="input_role_arn"></a> [role\_arn](#input\_role\_arn) | The Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager | `string` | `""` | no |
 | <a name="input_session_pinning_filters"></a> [session\_pinning\_filters](#input\_session\_pinning\_filters) | Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection | `list(string)` | `[]` | no |
