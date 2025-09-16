@@ -10,7 +10,7 @@ data "aws_service_principal" "rds" {
   count = var.create && var.create_iam_role ? 1 : 0
 
   service_name = "rds"
-  region       = data.aws_region.current.name
+  region       = data.aws_region.current.region
 }
 ################################################################################
 # RDS Proxy
@@ -153,7 +153,7 @@ data "aws_iam_policy_document" "this" {
       test     = "StringEquals"
       variable = "kms:ViaService"
       values = [
-        "secretsmanager.${data.aws_region.current.name}.${data.aws_partition.current.dns_suffix}"
+        "secretsmanager.${data.aws_region.current.region}.${data.aws_partition.current.dns_suffix}"
       ]
     }
   }
