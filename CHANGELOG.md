@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.0.0...v4.1.0) (2025-10-01)
+
+
+### Features
+
+* Add Terragrunt wrappers ([#38](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/38)) ([33b43c7](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/33b43c72abdad0b01655238d844e56dabca5e6d4))
+
 ## [4.0.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v3.2.1...v4.0.0) (2025-09-16)
 
 
