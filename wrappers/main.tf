@@ -15,6 +15,7 @@ module "wrapper" {
   db_cluster_identifier          = try(each.value.db_cluster_identifier, var.defaults.db_cluster_identifier, "")
   db_instance_identifier         = try(each.value.db_instance_identifier, var.defaults.db_instance_identifier, "")
   debug_logging                  = try(each.value.debug_logging, var.defaults.debug_logging, false)
+  default_auth_scheme            = try(each.value.default_auth_scheme, var.defaults.default_auth_scheme, null)
   endpoints                      = try(each.value.endpoints, var.defaults.endpoints, {})
   engine_family                  = try(each.value.engine_family, var.defaults.engine_family, "")
   iam_policy_name                = try(each.value.iam_policy_name, var.defaults.iam_policy_name, "")
