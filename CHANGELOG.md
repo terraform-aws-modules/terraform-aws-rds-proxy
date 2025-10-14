@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.1.0...v4.2.0) (2025-10-14)
+
+
+### Features
+
+* Support `default_auth_scheme` ([#39](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/39)) ([c2073a0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/c2073a031c947270dac3f17c7f76e2996cd1b5b1))
+
 ## [4.1.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.0.0...v4.1.0) (2025-10-01)
 
 
