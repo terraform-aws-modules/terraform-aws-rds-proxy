@@ -49,6 +49,12 @@ variable "debug_logging" {
   default     = false
 }
 
+variable "default_auth_scheme" {
+  description = "Default authentication scheme that the proxy uses for client connections to the proxy and connections from the proxy to the underlying database. Valid values are NONE and IAM_AUTH. Defaults to NONE"
+  type        = string
+  default     = null
+}
+
 variable "engine_family" {
   description = "The kind of database engine that the proxy will connect to. Valid values are `MYSQL` or `POSTGRESQL`"
   type        = string

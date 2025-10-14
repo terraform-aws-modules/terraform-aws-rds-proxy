@@ -88,7 +88,7 @@ module "rds" {
 
   name            = local.name
   engine          = "aurora-postgresql"
-  engine_version  = "14.7"
+  engine_version  = "17.5"
   master_username = "root"
 
   # When using RDS Proxy w/ IAM auth - Database must be username/password auth, not IAM

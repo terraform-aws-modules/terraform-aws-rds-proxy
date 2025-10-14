@@ -21,6 +21,7 @@ resource "aws_db_proxy" "this" {
   }
 
   debug_logging          = var.debug_logging
+  default_auth_scheme    = var.default_auth_scheme
   engine_family          = var.engine_family
   idle_client_timeout    = var.idle_client_timeout
   name                   = var.name
