@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.3.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.2.1...v4.3.0) (2026-01-08)
+
+### Features
+
+* Add provider meta user-agent ([#42](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/42)) ([bf9479c](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/bf9479c82269d32093ca6930b592e2ed890533cb))
+
 ## [4.2.1](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.2.0...v4.2.1) (2025-10-21)
 
 ### Bug Fixes
