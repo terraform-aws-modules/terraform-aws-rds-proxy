@@ -20,15 +20,17 @@ resource "aws_db_proxy" "this" {
     }
   }
 
-  debug_logging          = var.debug_logging
-  default_auth_scheme    = var.default_auth_scheme
-  engine_family          = var.engine_family
-  idle_client_timeout    = var.idle_client_timeout
-  name                   = var.name
-  require_tls            = var.require_tls
-  role_arn               = try(aws_iam_role.this[0].arn, var.role_arn)
-  vpc_security_group_ids = var.vpc_security_group_ids
-  vpc_subnet_ids         = var.vpc_subnet_ids
+  debug_logging                  = var.debug_logging
+  default_auth_scheme            = var.default_auth_scheme
+  endpoint_network_type          = var.endpoint_network_type
+  engine_family                  = var.engine_family
+  idle_client_timeout            = var.idle_client_timeout
+  name                           = var.name
+  require_tls                    = var.require_tls
+  role_arn                       = try(aws_iam_role.this[0].arn, var.role_arn)
+  target_connection_network_type = var.target_connection_network_type
+  vpc_security_group_ids         = var.vpc_security_group_ids
+  vpc_subnet_ids                 = var.vpc_subnet_ids
 
   tags = merge(var.tags, var.proxy_tags)
 

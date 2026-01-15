@@ -55,6 +55,12 @@ variable "default_auth_scheme" {
   default     = null
 }
 
+variable "endpoint_network_type" {
+  description = "Network type of the DB proxy endpoint. Valid values are IPV4, IPV6 and DUAL. Defaults to IPV4. If IPV6 is specified, the subnets associated with the proxy must be IPv6-only, and target_connection_network_type must be IPV6"
+  type        = string
+  default     = null
+}
+
 variable "engine_family" {
   description = "The kind of database engine that the proxy will connect to. Valid values are `MYSQL` or `POSTGRESQL`"
   type        = string
@@ -77,6 +83,12 @@ variable "role_arn" {
   description = "The Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
   type        = string
   default     = ""
+}
+
+variable "target_connection_network_type" {
+  description = "Network type that the proxy uses to connect to the target database. Valid values are IPV4 and IPV6. Defaults to IPV4"
+  type        = string
+  default     = null
 }
 
 variable "vpc_security_group_ids" {
