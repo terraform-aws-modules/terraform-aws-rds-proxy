@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.3.0...v4.4.0) (2026-01-15)
+
+### Features
+
+* Support `endpoint_network_type` and `target_connection_network_type` for `aws_db_proxy` ([#44](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/issues/44)) ([5ca95b7](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/commit/5ca95b74ed8b25b9dc259a12dfb36f58e1186e0d))
+
 ## [4.3.0](https://github.com/terraform-aws-modules/terraform-aws-rds-proxy/compare/v4.2.1...v4.3.0) (2026-01-08)
 
 ### Features
